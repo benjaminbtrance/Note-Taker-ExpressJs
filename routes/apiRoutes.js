@@ -33,5 +33,24 @@ module.exports = (app) => {
 	});
 
 	// API DELETE Requests
-	app.delete('/api/notes/:id', (req, res) => {});
+	app.delete('/api/notes/:id', (req, res) => {
+		fs.readFile('./db/db.json', 'utf8', (err, data) => {
+			const noteId = req.params.id;
+			const notes = JSON.parse(data);
+			for (let i = 0; i < notes.length; i++) {
+				if (notes[i].id === Number(noteId)) {
+					notes.splice([i], 1);
+				}
+			}
+			fs.writeFile('./db/db.json', JSON.stringify(notes), (err) => {
+				if (err) {
+					console.log(err);
+					res.json(false);
+				} else {
+					console.log('Thank you for your notes.');
+					res.json(true);
+				}
+			});
+		});
+	});
 };
