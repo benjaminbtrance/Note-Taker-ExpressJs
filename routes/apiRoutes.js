@@ -14,6 +14,12 @@ module.exports = (app) => {
 		fs.readFile('./db/db.json', 'utf8', (err, data) => {
 			const notes = JSON.parse(data);
 			notes.push(req.body);
+			let startId = 1;
+			notes.forEach((note, index) => {
+				note.id = startId;
+				startId++;
+				return notes;
+			});
 			fs.writeFile('./db/db.json', JSON.stringify(notes), (err) => {
 				if (err) {
 					console.log(err);
